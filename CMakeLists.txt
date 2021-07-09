@@ -10,19 +10,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 message(STATUS "Starting collecting dependencies")
 
-
 message(STATUS "Collecting project files")
 
 add_subdirectory("${CMAKE_SOURCE_DIR}/src")
-
-if(DEFINED USE_GTEST AND USE_GTEST)
-    enable_testing()
-    message(STATUS "Starting collecting dependencies")
-    # Prevent overriding the parent project's compiler/linker
-    # settings on Windows
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-    add_subdirectory("${CMAKE_SOURCE_DIR}/googletest" "${CMAKE_BINARY_DIR}/googletest-bin" EXCLUDE_FROM_ALL)
-    message(STATUS "Collecting test files")
-    add_subdirectory("${CMAKE_SOURCE_DIR}/tests")
-    add_test(NAME tests COMMAND tests)
-endif()
