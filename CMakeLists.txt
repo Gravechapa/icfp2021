@@ -12,4 +12,8 @@ message(STATUS "Starting collecting dependencies")
 
 message(STATUS "Collecting project files")
 
+add_subdirectory("${CMAKE_SOURCE_DIR}/thirdparty/cxxopts" "${CMAKE_BINARY_DIR}/cxxopts-bin" EXCLUDE_FROM_ALL)
+
+add_subdirectory("${CMAKE_SOURCE_DIR}/thirdparty/cpp-httplib" "${CMAKE_BINARY_DIR}/cpp-httplib-bin" EXCLUDE_FROM_ALL)
+
 add_subdirectory("${CMAKE_SOURCE_DIR}/src")
