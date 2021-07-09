@@ -1,8 +1,7 @@
-#define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
-#undef CPPHTTPLIB_OPENSSL_SUPPORT
 #include <cxxopts.hpp>
 #include <iostream>
+#include <sstream>
 
 int main(int argc, char* argv[])
 {
@@ -20,13 +19,16 @@ int main(int argc, char* argv[])
         std::cout << options.help() << std::endl;
     }
 
-    httplib::Client cli("http://poses.live/api");
+    httplib::Client cli("https://poses.live");
 
     httplib::Headers header = {
-        {"Authorization", "Bearer" + result["token"].as<std::string>()}
+        {"Authorization", "Bearer " + result["token"].as<std::string>()}
     };
 
-    auto response = cli.Get("/problems/1", header);
+    std::stringstream requestPathBuilder;
+    requestPathBuilder << "/api/problems/" << result["task"].as<int>();
+
+    auto response = cli.Get(requestPathBuilder.str().c_str(), header);
 
     if (response->status == 200)
     {
