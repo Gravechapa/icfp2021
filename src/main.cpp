@@ -1,6 +1,7 @@
+#include <httplib.h>
 #include <cxxopts.hpp>
 #include <iostream>
-#include <httplib.h>
+#include <sstream>
 
 #include "Plot.hpp"
 
@@ -38,13 +39,21 @@ int main(int argc, char* argv[])
         std::cout << options.help() << std::endl;
     }
 
-    httplib::Client cli("https://poses.live/api");
+    httplib::Client cli("https://poses.live");
 
     httplib::Headers header = {
-        {"Authorization", "Bearer" + result["token"].as<std::string>()}
+        {"Authorization", "Bearer " + result["token"].as<std::string>()}
     };
 
-    cli.Get("/hello", header);
+    std::stringstream requestPathBuilder;
+    requestPathBuilder << "/api/problems/" << result["task"].as<int>();
+
+    auto response = cli.Get(requestPathBuilder.str().c_str(), header);
+
+    if (response->status == 200)
+    {
+        std::cout << response->body << std::endl;
+    }
 
     return 0;
 }
