@@ -22,3 +22,13 @@ inline bool operator==(const Vector &r, const Vector &l)
 {
     return (r.x == l.x && r.y == l.y);
 }
+
+inline double operator*(const Vector& r, const Vector& l)
+{
+    return (r.x * l.x) + (r.y * l.y);
+}
+
+inline Vector operator-(const Vector& r, const Vector& l)
+{
+    return { r.x - l.x, r.y - l.y };
+}
