@@ -18,4 +18,6 @@ find_package(OpenSSL 1.1.1 REQUIRED)
 
 add_subdirectory("${CMAKE_SOURCE_DIR}/thirdparty/cpp-httplib" "${CMAKE_BINARY_DIR}/cpp-httplib-bin" EXCLUDE_FROM_ALL)
 
+add_subdirectory("${CMAKE_SOURCE_DIR}/thirdparty/matplotplusplus" "${CMAKE_BINARY_DIR}/matplotplusplus-bin" EXCLUDE_FROM_ALL)
+
 add_subdirectory("${CMAKE_SOURCE_DIR}/src")
