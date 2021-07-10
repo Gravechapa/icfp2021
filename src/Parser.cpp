@@ -132,11 +132,11 @@ std::tuple<Hole, Figure, Bonuses> parseTask(std::string &task)
     return {hole, figure, bonuses};
 }
 
-std::string generateSolution(Figure &figure, Hole &hole)
+std::string generateSolution(std::vector<Point> &pose)
 {
     nlohmann::json solution;
     auto& solVert = solution["vertices"];
-    for (auto &vertex : figure.getSolution(hole))
+    for (auto &vertex : pose)
     {
         solVert.push_back({vertex.x, vertex.y});
     }

@@ -2,4 +2,4 @@
 #include "Hole.hpp"
 #include "Figure.hpp"
 
-void plot(Figure &figure, Hole &hole);
+void plot(Figure &figure, Hole &hole, std::vector<Point> &pose);

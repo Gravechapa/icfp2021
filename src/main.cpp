@@ -56,12 +56,14 @@ int main(int argc, char* argv[])
 
     auto[hole, figure, bonuses] = parseTask(response->body);
 
+    auto finalPose = figure.getSolution(hole);
+
     if (result.count("plot"))
     {
-        plot(figure, hole);
+        plot(figure, hole, finalPose);
     }
 
-    auto solution = generateSolution(figure, hole);
+    auto solution = generateSolution(finalPose);
 
     char key;
     std::cout << "Submit? y/n" << std::endl;
