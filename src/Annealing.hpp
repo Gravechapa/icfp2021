@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include "Vector.hpp"
 #include "Figure.hpp"
 #include "Hole.hpp"
 

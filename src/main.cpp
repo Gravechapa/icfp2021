@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     auto response = cli.Get(requestPath.c_str(), header);
     responseCheck(response);
 
-    auto[hole, figure, bonus] = parseTask(response->body);
+    auto[hole, figure, bonuses] = parseTask(response->body);
 
     plot(figure, hole);
 

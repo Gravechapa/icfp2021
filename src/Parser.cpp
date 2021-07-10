@@ -2,7 +2,14 @@
 
 #include <nlohmann/json.hpp>
 
-std::tuple<Hole, Figure, Bonus> parseTask(std::string &task)
+BonusType getBonusType(const std::string &bTString)
+{
+    if (bTString == "GLOBALIST"){return BonusType::GLOBALIST;}
+    if (bTString == "BREAK_A_LEG"){return BonusType::BREAK_A_LEG;}
+    throw std::runtime_error("Bad json: unknown bonus type");
+}
+
+std::tuple<Hole, Figure, Bonuses> parseTask(std::string &task)
 {
     nlohmann::json json;
     json = json.parse(task);
@@ -71,7 +78,57 @@ std::tuple<Hole, Figure, Bonus> parseTask(std::string &task)
     }
     Figure figure(edges, vertices, it.value().get<int64_t>());
 
-    return {hole, figure, Bonus()};
+    Bonuses bonuses;
+    auto bonusesIt = json.find("bonuses");
+    if (bonusesIt != json.end())
+    {
+        if (!bonusesIt.value().is_array())
+        {
+            throw std::runtime_error("Bad json: field \"bonuses\" is not an array");
+        }
+        for (auto& element : *bonusesIt)
+        {
+            if (!element.is_object())
+            {
+                throw std::runtime_error("Bad json: \"bonuses\" array contain elements which is not objects");
+            }
+
+            it = element.find("position");
+            if (it == element.end())
+            {
+                throw std::runtime_error("Bad json: there is no \"position\" in \"bonuses\" object");
+            }
+            if (!it.value().is_array())
+            {
+                throw std::runtime_error("Bad json: field \"bonuses[]::position\" is not an array");
+            }
+            Point position{it.value()[0], it.value()[1]};
+
+            it = element.find("bonus");
+            if (it == element.end())
+            {
+                throw std::runtime_error("Bad json: there is no \"bonus\" in \"bonuses\" object");
+            }
+            if (!it.value().is_string())
+            {
+                throw std::runtime_error("Bad json: field \"bonuses[]::bonus\" is not a string");
+            }
+            auto bonus = getBonusType(it.value().get<std::string>());
+
+            it = element.find("problem");
+            if (it == element.end())
+            {
+                throw std::runtime_error("Bad json: there is no \"problem\" in \"bonuses\" object");
+            }
+            if (!it.value().is_number_integer())
+            {
+                throw std::runtime_error("Bad json: field \"bonuses[]::problem\" is not an integer");
+            }
+            bonuses.emplace_back(Bonus(position, bonus, it.value().get<int64_t>()));
+        }
+    }
+
+    return {hole, figure, bonuses};
 }
 
 std::string generateSolution(Figure &figure)
