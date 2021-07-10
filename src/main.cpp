@@ -11,12 +11,19 @@ void responseCheck(const httplib::Result &response)
     {
         throw std::runtime_error("Unexpected server response:\nNo response from server");
     }
-    if (response->status != 200)
+
+
+    switch (response->status)
     {
+    case 200:
+        std::cout << response->body << std::endl;
+        return;
+    case 429:
+        std::cout << "Wait at least 5 minutes" << std::endl;
+    default:
         throw std::runtime_error("Unexpected server response:\nHTTP code: " + std::to_string(response->status)
-                                 + "\nResponse body: " + response->body);
+            + "\nResponse body: " + response->body);
     }
-    std::cout << response->body << std::endl;
 }
 
 int main(int argc, char* argv[])
@@ -26,6 +33,7 @@ int main(int argc, char* argv[])
     options.add_options()
         ("t,task", "Task id", cxxopts::value<int>())
         ("token", "Access token", cxxopts::value<std::string>())
+        ("plot", "Plot")
         ("h,help", "Print usage");
 
     auto result = options.parse(argc, argv);
@@ -48,8 +56,12 @@ int main(int argc, char* argv[])
 
     auto[hole, figure, bonuses] = parseTask(response->body);
 
-    plot(figure, hole);
+    if (result.count("plot"))
+    {
+        plot(figure, hole);
+    }
 
+    auto solution = generateSolution(figure, hole);
 
     char key;
     std::cout << "Submit? y/n" << std::endl;
@@ -63,7 +75,7 @@ int main(int argc, char* argv[])
     }
 
     std::string replayPath = "/api/problems/" + std::to_string(result["task"].as<int>()) + "/solutions" ;
-    responseCheck(cli.Post(replayPath.c_str(), header, generateSolution(figure).c_str(), "application/json"));
+    responseCheck(cli.Post(replayPath.c_str(), header, solution.c_str(), "application/json"));
 
     return 0;
 }

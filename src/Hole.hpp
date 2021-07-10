@@ -11,6 +11,8 @@ public:
 
     double countDislikes(std::vector<Vector>& pose);
 
+    double countDislikes(std::vector<Vector>& pose, size_t testIndex, Vector& testPosition);
+
 private:
     std::vector<Point> _holeArray{};
 };
