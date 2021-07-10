@@ -1,10 +1,10 @@
 #include "Figure.hpp"
 
-Figure::Figure(std::vector<vertexNumber>&edges, std::vector<Point> &vertices, int64_t epsilone)
+Figure::Figure(std::vector<VertexNumber>&edges, std::vector<Point> &vertices, int64_t epsilone)
     :_epsilone(epsilone), _edges(edges), _vertices(vertices)
 {}
 
-std::vector<vertexNumber> Figure::getEdges()
+std::vector<VertexNumber> Figure::getEdges()
 {
     return _edges;
 }

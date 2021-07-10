@@ -35,4 +35,6 @@ double Hole::countDislikes(std::vector<Vector>& pose)
 
         dislike += minDistance;
     }
+
+    return dislike;
 }
