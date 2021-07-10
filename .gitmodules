@@ -7,3 +7,6 @@
 [submodule "matplotplusplus"]
 	path = thirdparty/matplotplusplus
 	url = https://github.com/alandefreitas/matplotplusplus.git
+[submodule "json"]
+	path = thirdparty/json
+	url = https://github.com/nlohmann/json.git

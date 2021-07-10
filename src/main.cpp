@@ -2,29 +2,26 @@
 #include <cxxopts.hpp>
 #include <iostream>
 #include <sstream>
+#include <nlohmann/json.hpp>
 
 #include "Plot.hpp"
 
+void responseCheck(const httplib::Result &response)
+{
+    if (!response)
+    {
+        throw std::runtime_error("Unexpected server response:\nNo response from server");
+    }
+    if (response->status != 200)
+    {
+        throw std::runtime_error("Unexpected server response:\nHTTP code: " + std::to_string(response->status)
+                                 + "\nResponse body: " + response->body);
+    }
+    std::cout << response->body << std::endl;
+}
+
 int main(int argc, char* argv[])
 {
-
-    /*std::vector<vertexNumber> edges = {
-        {2, 5},{5, 4},{4, 1}, {1, 0}, {0, 8}, {8, 3}, {3, 7},{7, 11}, {11, 13},
-        {13, 12}, {12, 18}, {18, 19}, {19, 14},{14, 15}, {15, 17}, {17, 16}, {16, 10},
-        {10, 6}, {6, 2},{8, 12}, {7, 9}, {9, 3}, {8, 9}, {9, 12}, {13, 9}, {9, 11},
-        {4, 8}, {12, 14}, {5, 10}, {10, 15}
-    };
-    std::vector<Point> vertices = {
-        {20, 30}, {20, 40}, {30, 95}, {40, 15}, {40, 35}, {40, 65},{40, 95}, {45, 5},
-        {45, 25}, {50, 15}, {50, 70}, {55, 5},{55, 25}, {60, 15}, {60, 35}, {60, 65},
-        {60, 95}, {70, 95},{80, 30}, {80, 40}
-    };
-    std::vector<Point> holeArray = {{55, 80}, {65, 95}, {95, 95}, {35, 5}, {5, 5},{35, 50}, {5, 95}, {35, 95}, {45, 80}};
-    Figure figure(edges, vertices, 0);
-    Hole hole(holeArray);
-
-    plot(figure, hole);*/
-
     cxxopts::Options options("ICFPC2021", "Program for solving tasks");
 
     options.add_options()
@@ -45,15 +42,104 @@ int main(int argc, char* argv[])
         {"Authorization", "Bearer " + result["token"].as<std::string>()}
     };
 
-    std::stringstream requestPathBuilder;
-    requestPathBuilder << "/api/problems/" << result["task"].as<int>();
+    std::string requestPath = "/api/problems/" + std::to_string(result["task"].as<int>());
 
-    auto response = cli.Get(requestPathBuilder.str().c_str(), header);
+    auto response = cli.Get(requestPath.c_str(), header);
+    responseCheck(response);
 
-    if (response->status == 200)
+    nlohmann::json json;
+    json = json.parse(response->body);
+    auto it = json.find("hole");
+    if (it == json.end())
     {
-        std::cout << response->body << std::endl;
+        throw std::runtime_error("Bad json: there is no \"hole\"");
     }
+    if (!it.value().is_array())
+    {
+        throw std::runtime_error("Bad json: field \"hole\" is not an array");
+    }
+    std::vector<Point> holeArray;
+    for (auto& element : *it)
+    {
+        holeArray.push_back({element[0], element[1]});
+    }
+    Hole hole(holeArray);
+
+    auto figureIt = json.find("figure");
+    if (figureIt == json.end())
+    {
+        throw std::runtime_error("Bad json: there is no \"figure\"");
+    }
+    if (!figureIt.value().is_object())
+    {
+        throw std::runtime_error("Bad json: field \"figure\" is not an object");
+    }
+    it = figureIt->find("edges");
+    if (it == figureIt->end())
+    {
+        throw std::runtime_error("Bad json: there is no \"edges\"");
+    }
+    if (!it.value().is_array())
+    {
+        throw std::runtime_error("Bad json: field \"edges\" is not an array");
+    }
+    std::vector<vertexNumber> edges;
+    for (auto& element : *it)
+    {
+        edges.push_back({element[0], element[1]});
+    }
+    it = figureIt.value().find("vertices");
+    if (it == figureIt->end())
+    {
+        throw std::runtime_error("Bad json: there is no \"vertices\"");
+    }
+    if (!it.value().is_array())
+    {
+        throw std::runtime_error("Bad json: field \"vertices\" is not an array");
+    }
+    std::vector<Point> vertices;
+    for (auto& element : *it)
+    {
+        vertices.push_back({element[0], element[1]});
+    }
+
+    it = json.find("epsilon");
+    if (it == json.end())
+    {
+        throw std::runtime_error("Bad json: there is no \"epsilon\"");
+    }
+    if (!it.value().is_number_integer())
+    {
+        throw std::runtime_error("Bad json: field \"epsilon\" is not an array");
+    }
+    Figure figure(edges, vertices, it.value().get<int64_t>());
+
+
+    plot(figure, hole);
+
+
+    char key;
+    std::cout << "Submit? y/n" << std::endl;
+    do
+    {
+        std::cin >> key;
+    }while (key != 'y' && key != 'n');
+    if (key == 'n')
+    {
+        return 0;
+    }
+
+    nlohmann::json solution;
+    auto& solVert = solution["vertices"];
+    ///TODO send real solution
+    for (auto &vertex : vertices)
+    {
+        solVert.push_back({vertex.x, vertex.y});
+    }
+    std::stringstream jsonSer;
+    jsonSer << solution;
+    std::string replayPath = "/api/problems/" + std::to_string(result["task"].as<int>()) + "/solutions" ;
+    responseCheck(cli.Post(replayPath.c_str(), header, jsonSer.str().c_str(), "application/json"));
 
     return 0;
 }

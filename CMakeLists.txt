@@ -20,4 +20,6 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/thirdparty/cpp-httplib" "${CMAKE_BINARY_DI
 
 add_subdirectory("${CMAKE_SOURCE_DIR}/thirdparty/matplotplusplus" "${CMAKE_BINARY_DIR}/matplotplusplus-bin" EXCLUDE_FROM_ALL)
 
+add_subdirectory("${CMAKE_SOURCE_DIR}/thirdparty/json" "${CMAKE_BINARY_DIR}/json-bin" EXCLUDE_FROM_ALL)
+
 add_subdirectory("${CMAKE_SOURCE_DIR}/src")
