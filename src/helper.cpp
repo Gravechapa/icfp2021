@@ -1,7 +1,6 @@
 #include <vector>
 #include <cmath>
 #include "helper.hpp"
-#include "Vector.hpp"
 
 bool isInsideFigure(std::vector<Vector>& vertices, Vector& testVertex)
 {
