@@ -74,6 +74,11 @@ std::vector<Vector> getPositions(std::vector<double> &originalDistances, std::ve
         for (auto i = 1; i < connectedVertices.size(); i++)
         {
             isNormal = isNormal && isPositionAllowed(connectedVertices[i], pos, originalDistances[i], epsilon);
+
+            if (!isNormal)
+            {
+                break;
+            }
         }
 
         if (isNormal)

@@ -17,7 +17,7 @@ std::vector<Vector> Annealing::getPose(Figure& figure, Hole& hole, uint16_t epsi
 
     auto dislikes = hole.countDislikes(pose);
 
-    double T = 100;
+    double T = 10000;
 
     for (auto t = T; t > 0; t -= 0.01)
     {
