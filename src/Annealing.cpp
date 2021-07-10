@@ -75,7 +75,7 @@ std::vector<Vector> Annealing::getPose(Figure& figure, Hole& hole, uint16_t epsi
 
         auto newDislikes = hole.countDislikes(pose, movePoint, availablePoints[newPosition]);
 
-        if (isInsideFigure(hole.getPoints(), availablePoints[newPosition]))
+        if (!isInsideFigure(hole.getPoints(), availablePoints[newPosition]))
         {
             newDislikes = newDislikes * 1000;
         }
