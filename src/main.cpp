@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
     {
         throw std::runtime_error("Bad json: field \"edges\" is not an array");
     }
-    std::vector<vertexNumber> edges;
+    std::vector<VertexNumber> edges;
     for (auto& element : *it)
     {
         edges.push_back({element[0], element[1]});
