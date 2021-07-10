@@ -6,4 +6,4 @@
 #include <string>
 
 std::tuple<Hole, Figure, Bonus> parseTask(std::string &task);
-std::string generateSolution(Figure &figure);
+std::string generateSolution(Figure &figure, Hole &hole);

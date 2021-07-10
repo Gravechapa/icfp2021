@@ -1,5 +1,6 @@
 #include "Parser.hpp"
 
+#include <iostream>
 #include <nlohmann/json.hpp>
 
 std::tuple<Hole, Figure, Bonus> parseTask(std::string &task)
@@ -74,13 +75,17 @@ std::tuple<Hole, Figure, Bonus> parseTask(std::string &task)
     return {hole, figure, Bonus()};
 }
 
-std::string generateSolution(Figure &figure)
+std::string generateSolution(Figure &figure, Hole &hole)
 {
     nlohmann::json solution;
     auto& solVert = solution["vertices"];
-    for (auto &vertex : figure.getSolution())
+    for (auto &vertex : figure.getSolution(hole))
     {
         solVert.push_back({vertex.x, vertex.y});
     }
-    return solution.dump();
+
+    auto json = solution.dump();
+    std::cout << json << std::endl;
+
+    return json;
 }

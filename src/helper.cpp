@@ -24,11 +24,13 @@ bool isInsideFigure(std::vector<Vector>& vertices, Vector& testVertex)
 
 std::vector<Vector> getAvailablePositions(Vector &vertex, double length, uint64_t epsilon)
 {
-    auto minLength = length * (1.0 - epsilon / 1000000000.0); // Const from specifications
-    auto maxLength = length * (1.0 + epsilon / 1000000000.0); // Const from specifications
+    auto sqLength = length * length;
 
-    auto sqMinLength = minLength * minLength;
-    auto sqMaxLength = maxLength * maxLength;
+    auto sqMinLength = sqLength * (1.0 - epsilon / 1000000.0); // Const from specifications
+    auto sqMaxLength = sqLength * (1.0 + epsilon / 1000000.0); // Const from specifications
+
+    auto minLength = std::sqrt(sqMinLength);
+    auto maxLength = std::sqrt(sqMaxLength);
 
     std::vector<Vector> resultPoints;
 
@@ -49,11 +51,10 @@ std::vector<Vector> getAvailablePositions(Vector &vertex, double length, uint64_
 
 bool isPositionAllowed(Vector &vertex, Vector &testVertex, double edgeLength, uint64_t epsilon)
 {
-    auto minLength = edgeLength * (1.0 - epsilon / 1000000000.0); // Const from specifications
-    auto maxLength = edgeLength * (1.0 + epsilon / 1000000000.0); // Const from specifications
+    auto sqLength = edgeLength * edgeLength;
 
-    auto sqMinLength = minLength * minLength;
-    auto sqMaxLength = maxLength * maxLength;
+    auto sqMinLength = sqLength * (1.0 - epsilon / 1000000.0); // Const from specifications
+    auto sqMaxLength = sqLength * (1.0 + epsilon / 1000000.0); // Const from specifications
 
     auto dist = (vertex - testVertex) * (vertex - testVertex);
 
@@ -74,9 +75,9 @@ std::vector<Vector> getPositions(std::vector<double> &originalDistances, std::ve
         {
             isNormal = isNormal && isPositionAllowed(connectedVertices[i], pos, originalDistances[i], epsilon);
 
-            if (isNormal)
+            if (!isNormal)
             {
-                isNormal = isNormal && isInsideFigure(holePoints, pos);
+                break;
             }
         }
 
