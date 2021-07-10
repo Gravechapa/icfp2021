@@ -11,6 +11,7 @@ class Figure
 {
 public:
     Figure(std::vector<VertexNumber> &edges, std::vector<Point> &vertices, int64_t epsilone);
+    std::vector<Point>& getSolution();
 
     std::vector<VertexNumber> getEdges();
     std::vector<double> getVerticesX();
