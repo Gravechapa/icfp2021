@@ -4,6 +4,12 @@ Figure::Figure(std::vector<vertexNumber>&edges, std::vector<Point> &vertices, in
     :_epsilone(epsilone), _edges(edges), _vertices(vertices)
 {}
 
+std::vector<Point>& Figure::getSolution()
+{
+    ///TODO send real solution
+    return _vertices;
+}
+
 std::vector<vertexNumber> Figure::getEdges()
 {
     return _edges;
