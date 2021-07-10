@@ -1,6 +1,7 @@
 #include "Figure.hpp"
 #include <algorithm>
 #include "Annealing.hpp"
+#include <cmath>
 
 Figure::Figure(std::vector<VertexNumber>&edges, std::vector<Point> &vertices, int64_t epsilone)
     :_epsilone(epsilone), _edges(edges), _vertices(vertices)
