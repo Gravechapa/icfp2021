@@ -11,7 +11,7 @@ using VertexNumber = std::pair<size_t, size_t>;
 
 struct EdgeInfo
 {
-    double length;
+    int64_t length;
     size_t pointedFirst;
     size_t pointedSecond;
 };

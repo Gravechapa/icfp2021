@@ -8,5 +8,5 @@ class Annealing
 {
 public:
 
-    std::vector<Vector> getPose(Figure& figure, Hole& hole, uint16_t epsilon);
+    std::vector<Vector> getPose(Figure& figure, Hole& hole, uint64_t epsilon);
 };
