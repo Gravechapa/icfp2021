@@ -5,8 +5,11 @@
 
 enum class BonusType
 {
+    UNKNOWN_BONUS,
     GLOBALIST,
-    BREAK_A_LEG
+    BREAK_A_LEG,
+    WALLHACK,
+    SUPERFLEX
 };
 
 class Bonus
