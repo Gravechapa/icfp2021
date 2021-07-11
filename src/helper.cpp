@@ -21,10 +21,8 @@ bool isInsideFigure(std::vector<Vector>& vertices, Vector& testVertex)
     return c;
 }
 
-std::vector<Vector> getAvailablePositions(Vector &vertex, double length, uint64_t epsilon)
+std::vector<Vector> getAvailablePositions(Vector &vertex, double sqLength, uint64_t epsilon)
 {
-    auto sqLength = length * length;
-
     auto sqMinLength = sqLength * (1.0 - epsilon / 1000000.0); // Const from specifications
     auto sqMaxLength = sqLength * (1.0 + epsilon / 1000000.0); // Const from specifications
 
@@ -33,12 +31,15 @@ std::vector<Vector> getAvailablePositions(Vector &vertex, double length, uint64_
 
     std::vector<Vector> resultPoints;
 
-    for (auto x = vertex.x - (int64_t)std::floor(maxLength); x < vertex.x + (int64_t)std::ceil(maxLength); x++)
+    auto ceil = (int64_t)std::ceil(maxLength);
+    auto floor = (int64_t)std::floor(maxLength);
+
+    for (auto x = vertex.x - floor; x <= vertex.x + floor; x++)
     {
-        for (auto y = vertex.y - (int64_t)std::floor(maxLength); y < vertex.y + (int64_t)std::ceil(maxLength); y++)
+        for (auto y = vertex.y - floor; y <= vertex.y + floor; y++)
         {
             auto sqDist = (x - vertex.x) * (x - vertex.x) + (y - vertex.y) * (y - vertex.y);
-            if (sqDist > sqMinLength && sqDist < sqMaxLength)
+            if (sqDist >= sqMinLength && sqDist <= sqMaxLength)
             {
                 resultPoints.emplace_back(Vector{ x, y });
             }
@@ -48,16 +49,14 @@ std::vector<Vector> getAvailablePositions(Vector &vertex, double length, uint64_
     return resultPoints;
 }
 
-bool isPositionAllowed(Vector &vertex, Vector &testVertex, double edgeLength, uint64_t epsilon)
+bool isPositionAllowed(Vector &vertex, Vector &testVertex, double sqEdgeLength, uint64_t epsilon)
 {
-    auto sqLength = edgeLength * edgeLength;
-
-    auto sqMinLength = sqLength * (1.0 - epsilon / 1000000.0); // Const from specifications
-    auto sqMaxLength = sqLength * (1.0 + epsilon / 1000000.0); // Const from specifications
+    auto sqMinLength = sqEdgeLength * (1.0 - epsilon / 1000000.0); // Const from specifications
+    auto sqMaxLength = sqEdgeLength * (1.0 + epsilon / 1000000.0); // Const from specifications
 
     auto dist = (vertex - testVertex) * (vertex - testVertex);
 
-    return dist > sqMinLength && dist < sqMaxLength;
+    return dist >= sqMinLength && dist <= sqMaxLength;
 }
 
 std::vector<Vector> getPositions(std::vector<double> &originalDistances, std::vector<Vector>& connectedVertices, uint16_t epsilon, std::vector<Vector>& holePoints)
