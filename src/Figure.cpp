@@ -13,7 +13,7 @@ Figure::Figure(std::vector<VertexNumber>&edges, std::vector<Point> &vertices, in
         [this](VertexNumber v)
     {
         auto diff = this->_vertices[v.first] - this->_vertices[v.second];
-        double length = std::sqrt(diff * diff);
+        double length = diff * diff;
 
         return EdgeInfo{ length, v.first, v.second };
     });

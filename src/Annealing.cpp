@@ -83,6 +83,7 @@ std::vector<Vector> Annealing::getPose(Figure& figure, Hole& hole, uint16_t epsi
         if (newDislikes <= dislikes)
         {
             pose[movePoint] = availablePoints[newPosition];
+            dislikes = newDislikes;
         }
         else
         {
@@ -93,6 +94,7 @@ std::vector<Vector> Annealing::getPose(Figure& figure, Hole& hole, uint16_t epsi
             if (uniform_zero_to_one(gen) < probabilityToMove)
             {
                 pose[movePoint] = availablePoints[newPosition];
+                dislikes = newDislikes;
             }
         }
     }
