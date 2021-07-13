@@ -7,7 +7,11 @@ BonusType getBonusType(const std::string &bTString)
 {
     if (bTString == "GLOBALIST"){return BonusType::GLOBALIST;}
     if (bTString == "BREAK_A_LEG"){return BonusType::BREAK_A_LEG;}
-    throw std::runtime_error("Bad json: unknown bonus type");
+    if (bTString == "WALLHACK"){return BonusType::WALLHACK;}
+    if (bTString == "SUPERFLEX"){return BonusType::SUPERFLEX;}
+
+    std::cerr << "Warning: Unknown bonus type \"" << bTString << "\"" << std::endl;
+    return BonusType::UNKNOWN_BONUS;
 }
 
 std::tuple<Hole, Figure, Bonuses> parseTask(std::string &task)

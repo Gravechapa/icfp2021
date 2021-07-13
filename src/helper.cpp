@@ -21,12 +21,11 @@ bool isInsideFigure(std::vector<Vector>& vertices, Vector& testVertex)
     return c;
 }
 
-std::vector<Vector> getAvailablePositions(Vector &vertex, double sqLength, uint64_t epsilon)
+std::vector<Vector> getAvailablePositions(Vector &vertex, int64_t sqLength, uint64_t epsilon)
 {
     auto sqMinLength = sqLength * (1.0 - epsilon / 1000000.0); // Const from specifications
     auto sqMaxLength = sqLength * (1.0 + epsilon / 1000000.0); // Const from specifications
 
-    auto minLength = std::sqrt(sqMinLength);
     auto maxLength = std::sqrt(sqMaxLength);
 
     std::vector<Vector> resultPoints;
@@ -49,7 +48,7 @@ std::vector<Vector> getAvailablePositions(Vector &vertex, double sqLength, uint6
     return resultPoints;
 }
 
-bool isPositionAllowed(Vector &vertex, Vector &testVertex, double sqEdgeLength, uint64_t epsilon)
+bool isPositionAllowed(Vector &vertex, Vector &testVertex, int64_t sqEdgeLength, uint64_t epsilon)
 {
     auto sqMinLength = sqEdgeLength * (1.0 - epsilon / 1000000.0); // Const from specifications
     auto sqMaxLength = sqEdgeLength * (1.0 + epsilon / 1000000.0); // Const from specifications
@@ -59,7 +58,7 @@ bool isPositionAllowed(Vector &vertex, Vector &testVertex, double sqEdgeLength, 
     return dist >= sqMinLength && dist <= sqMaxLength;
 }
 
-std::vector<Vector> getPositions(std::vector<double> &originalDistances, std::vector<Vector>& connectedVertices, uint16_t epsilon, std::vector<Vector>& holePoints)
+std::vector<Vector> getPositions(std::vector<double> &originalDistances, std::vector<Vector>& connectedVertices, uint64_t epsilon)
 {
     auto potentialPositions = getAvailablePositions(connectedVertices[0], originalDistances[0], epsilon);
 

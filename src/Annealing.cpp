@@ -4,11 +4,10 @@
 #include "helper.hpp"
 #include "Annealing.hpp"
 
-std::vector<Vector> Annealing::getPose(Figure& figure, Hole& hole, uint16_t epsilon)
+std::vector<Vector> Annealing::getPose(Figure& figure, Hole& hole, uint64_t epsilon)
 {
     auto& points = figure.getConnectedPoints();
-    std::vector<Vector> pose(points.size());
-    std::copy(points.cbegin(), points.cend(), pose.begin());
+    std::vector<Vector> pose(points);
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -21,9 +20,6 @@ std::vector<Vector> Annealing::getPose(Figure& figure, Hole& hole, uint16_t epsi
 
     for (auto t = T; t > 0; t -= 0.01)
     {
-        std::vector<Vector> potentialPose(points.size());
-        std::copy(points.cbegin(), points.cend(), potentialPose.begin());
-
         size_t availPointsSize = 0;
         std::vector<Vector> availablePoints;
         size_t movePoint;
@@ -63,7 +59,7 @@ std::vector<Vector> Annealing::getPose(Figure& figure, Hole& hole, uint16_t epsi
                 return pose[edge.pointedFirst];
             });
 
-            availablePoints = getPositions(lengths, connectedPoints, epsilon, hole.getPoints());
+            availablePoints = getPositions(lengths, connectedPoints, epsilon);
 
             availPointsSize = availablePoints.size();
         }
